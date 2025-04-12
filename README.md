@@ -6,7 +6,7 @@ You are only able to run code based on [attempto controlled english (ace)](https
 In the future, admins could through this restrict certain kinds of code from executing for security purposes.
 Additionally, it lessens the ambiguity of natural language and you can be sure that the resulting code will do what it should.
 
-Here are a few example commands in ACE that could be on AceCoding.social in the future:
+Here are a few example commands in ACE that could be run on AceCoding.social in the future:
 
 - Moderation: If a user posts more than 20 times in 1 hour then the system temporarily restricts the user's posting ability.
 - Look and feel: If a post contains an image then the system displays the image with rounded corners.
