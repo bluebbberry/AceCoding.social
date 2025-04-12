@@ -48,7 +48,7 @@ export class ChatComponent {
     this.microblogService.fetchHomeStatuses();
     this.microblogService.fetchLocalStatuses();
     this.microblogService.fetchGlobalStatuses();
-    this.microblogService.fetchSemanticStatuses();
+    // this.microblogService.fetchSemanticStatuses();
     this.userService.fetchUserInfo();
   }
 
@@ -82,7 +82,7 @@ export class ChatComponent {
         if (this.selectedFeed == Feed.HOME) {
           this.microblogService.fetchHomeStatuses();
         } else if (this.selectedFeed == Feed.SEAMANTIC) {
-          this.microblogService.fetchSemanticStatuses();
+          // this.microblogService.fetchSemanticStatuses();
         }
       });
       this.newMessage = '';
