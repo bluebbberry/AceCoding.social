@@ -1,4 +1,4 @@
-# acetea
+# AceCoding.social
 
 Mastodon client, where it is impossible to contradict oneself.
 
