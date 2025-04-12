@@ -33,6 +33,7 @@ export class ChatComponent {
   selection: string = "query";
   insertLabels: any;
   insertDescriptions: any;
+  bgColor: string = "white";
 
   constructor(private http: HttpClient,
               protected microblogService: MicroblogService,
@@ -75,7 +76,7 @@ export class ChatComponent {
     //   messageToSend = this.newMessage + ' #semanticweb';
     // }
     console.log("Clicked on send");
-    if (messageToSend) {
+    if (messageToSend && this.selectedFeed != Feed.SEAMANTIC) {
       this.statusesService.statuses.push(messageToSend);
       this.microblogService.sendMessage(messageToSend, () => {
         if (this.selectedFeed == Feed.HOME) {
@@ -85,9 +86,21 @@ export class ChatComponent {
         }
       });
       this.newMessage = '';
+    } else if (this.selectedFeed == Feed.SEAMANTIC) {
+      let color = this.extractColor(messageToSend);
+      if (color != null) {
+        this.bgColor = color;
+      } else {
+        alert("Syntax error (commands must be valid ace)");
+      }
     } else {
       alert("Failed to send a message");
     }
+  }
+
+  extractColor(sentence: string): string | null {
+    const match = sentence.match(/background\s+to\s+(\w+)/i);
+    return match ? match[1].toLowerCase() : null;
   }
 
   navigateTo(feed: Feed) {
