@@ -13,15 +13,15 @@
     name="w3review"
     rows="20"
     cols="80"
-    style="width: 100%; height: 300px; background-color: #000000; color: #00FF00; font-family: monospace; border: 2px inset #FFD700; padding: 10px; resize: none;">
-The app has two tabs.
-With the first tab the user is able to post to Mastodon.
-With the second tab the user is able to code with ACE.
+    style="width: 100%; height: 300px; background-color: #000000; color: #00FF00; font-family: monospace; border: 2px inset #FFD700; padding: 10px; resize: none;"
+  [value]="code"
+  (change)="changedCode($event)">
   </textarea>
 
   <!-- RUN Button -->
   <button
-    style="position: absolute; bottom: 20px; right: 20px; background: #FF00FF; color: yellow; font-size: 24px; font-weight: bold; border: 4px ridge #FFD700; padding: 10px 20px; cursor: pointer; box-shadow: 4px 4px 0 #000;">
+    style="position: absolute; bottom: 20px; right: 20px; background: #FF00FF; color: yellow; font-size: 24px; font-weight: bold; border: 4px ridge #FFD700; padding: 10px 20px; cursor: pointer; box-shadow: 4px 4px 0 #000;"
+    (click)="clickedRun()">
     RUN
   </button>
 </div>
