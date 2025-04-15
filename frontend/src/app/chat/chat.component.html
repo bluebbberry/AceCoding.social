@@ -18,10 +18,6 @@
     </div>
     <br>
     <div class="text-center">
-      <label>Sea-Level:&nbsp;</label>
-      <label>{{seLevelService.seLevel}}</label>
-    </div>
-    <div class="text-center">
       <label [hidden]="seLevelService.seLevel <= seLevelService.MAXIMUM_SE_LEVEL">Too high!<br>(Lower your Sea-Level by inserting knowledge into the feed)</label>
     </div>
   </div>

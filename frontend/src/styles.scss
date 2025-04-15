@@ -2,3 +2,118 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+/* retro90s.css */
+
+/* Global Reset with retro vibes */
+body {
+  background-color: black;
+  color: lime;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  padding: 20px;
+  margin: 0;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #00FFFF;
+  text-shadow: 2px 2px 0 #FF00FF;
+  border-bottom: 2px dotted #FFD700;
+  padding-bottom: 5px;
+  margin-top: 20px;
+}
+
+/* Links */
+a {
+  color: #00FFFF;
+  text-decoration: underline;
+}
+a:hover {
+  color: #FFFF00;
+  background-color: #FF00FF;
+}
+
+/* Inputs & Textareas */
+input, textarea {
+  background-color: #000;
+  color: #00FF00;
+  border: 2px inset #FFD700;
+  padding: 10px;
+  font-family: monospace;
+  resize: none;
+}
+
+/* Buttons */
+button {
+  background-color: #FF00FF;
+  color: yellow;
+  font-size: 20px;
+  font-weight: bold;
+  border: 4px ridge #FFD700;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+  transition: all 0.2s ease-in-out;
+}
+button:hover {
+  background-color: yellow;
+  color: #000;
+  border-color: cyan;
+}
+
+/* Containers */
+.feed, .container, .content, .main, .card {
+  background-color: #111;
+  border: 3px dashed magenta;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Retro table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: lime;
+}
+table, th, td {
+  border: 2px solid #00FFFF;
+}
+th {
+  background-color: #222;
+  color: yellow;
+}
+td {
+  padding: 8px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #00FF00;
+  border: 2px solid #FF00FF;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+/* Optional Extras */
+.blink {
+  animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  animation: marquee 10s linear infinite;
+}
+@keyframes marquee {
+  0% { transform: translateX(100%) }
+  100% { transform: translateX(-100%) }
+}
+
