@@ -1,18 +1,17 @@
 import express from "express";
 import * as Config from "../configs/config.js";
 import masto from "../configs/mastodonclient.js";
-import { sendMsgToServerOverSidekick } from "../services/sidekick.service.js";
+import { send } from "../services/post.util.service.js";
 
 const router = express.Router();
 
 // post statuses to client
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
     // Send message to mastodon server
     console.log("Received message for " + request.body["sidekick"]);
     console.log("Received message: " + request.body["message"]);
-    sendMsgToServerOverSidekick(request.body["message"], request.body["sidekick"]);
-    response.sendStatus(200);
-    response.end();
+    await send(" " + request.body["message"]);
+    response.status(200);
 });
 
 // get statuses from client

@@ -18,6 +18,6 @@ export class SemanticFeedComponent {
 
   clickedOnReload() {
     this.microblogService.semanticStatuses = undefined;
-    this.microblogService.fetchSemanticStatuses();
+    // this.microblogService.fetchSemanticStatuses();
   }
 }
