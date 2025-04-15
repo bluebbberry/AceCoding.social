@@ -12,9 +12,10 @@ import {DolphinService} from "../services/dolphin.service";
 import {SeLevelService} from "../services/se-level.service";
 import {StatusesService} from "../services/statuses.service";
 import {SemanticFeedComponent} from "./semantic-feed/semantic-feed.component";
+import {AceParserService} from "../services/ace-parser.service";
 
 enum Feed {
-  HOME, LOCAL, GLOBAL, SEAMANTIC
+  HOME, LOCAL, GLOBAL, CODE
 }
 
 @Component({
@@ -42,7 +43,8 @@ export class ChatComponent {
               protected userService: UserService,
               protected dolphinService: DolphinService,
               protected seLevelService: SeLevelService,
-              protected statusesService: StatusesService) {
+              protected statusesService: StatusesService,
+              private aceParser: AceParserService) {
 
     // user has already chosen sidekick, the value cannot be null
     this.microblogService.fetchHomeStatuses();
@@ -76,23 +78,24 @@ export class ChatComponent {
     //   messageToSend = this.newMessage + ' #semanticweb';
     // }
     console.log("Clicked on send");
-    if (messageToSend && this.selectedFeed != Feed.SEAMANTIC) {
+    if (messageToSend && this.selectedFeed != Feed.CODE) {
       this.statusesService.statuses.push(messageToSend);
       this.microblogService.sendMessage(messageToSend, () => {
         if (this.selectedFeed == Feed.HOME) {
           this.microblogService.fetchHomeStatuses();
-        } else if (this.selectedFeed == Feed.SEAMANTIC) {
+        } else if (this.selectedFeed == Feed.CODE) {
           // this.microblogService.fetchSemanticStatuses();
         }
       });
       this.newMessage = '';
-    } else if (this.selectedFeed == Feed.SEAMANTIC) {
-      let color = this.extractColor(messageToSend);
-      if (color != null) {
-        this.bgColor = color;
-      } else {
-        alert("Syntax error (commands must be valid ace)");
-      }
+    } else if (this.selectedFeed == Feed.CODE) {
+      this.aceParser.parse(messageToSend);
+      // let color = this.extractColor(messageToSend);
+      // if (color != null) {
+      //   this.bgColor = color;
+      // } else {
+      //   alert("Syntax error (commands must be valid ace)");
+      // }
     } else {
       alert("Failed to send a message");
     }
@@ -114,8 +117,8 @@ export class ChatComponent {
       case Feed.GLOBAL:
         this.selectedFeed = Feed.GLOBAL;
         break;
-      case Feed.SEAMANTIC:
-        this.selectedFeed = Feed.SEAMANTIC;
+      case Feed.CODE:
+        this.selectedFeed = Feed.CODE;
         break;
     }
   }

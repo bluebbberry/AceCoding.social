@@ -10,7 +10,7 @@
       <button class="btn btn-outline-danger mb-2" (click)="navigateTo(Feed.HOME)">Home</button>
       <button class="btn btn-outline-secondary mb-2" (click)="navigateTo(Feed.LOCAL)">Local Feed</button>
       <button class="btn btn-outline-secondary mb-2" (click)="navigateTo(Feed.GLOBAL)">Global Feed</button>
-      <button class="btn btn-outline-secondary mb-2" (click)="navigateTo(Feed.SEAMANTIC)">Code</button>
+      <button class="btn btn-outline-secondary mb-2" (click)="navigateTo(Feed.CODE)">Code</button>
     </div>
     <br>
     <div class="nav-buttons d-flex flex-column">
@@ -29,14 +29,14 @@
       <app-local-feed class="overflow-auto"></app-local-feed>
     } @else if (selectedFeed == Feed.GLOBAL) {
       <app-global-feed class="overflow-auto"></app-global-feed>
-    } @else if (selectedFeed == Feed.SEAMANTIC) {
+    } @else if (selectedFeed == Feed.CODE) {
       <app-semantic-feed></app-semantic-feed>
     }
   </div>
 
   <!-- Fixed Post Box -->
   <div class="post-box fixed-bottom">
-    <select *ngIf="selectedFeed == Feed.SEAMANTIC" [(ngModel)]="selection">
+    <select *ngIf="selectedFeed == Feed.CODE" [(ngModel)]="selection">
       <option value="query">Query</option>
       <option value="insert">Insert Item</option>
     </select>
@@ -53,7 +53,7 @@
     </textarea>
 
       <!-- Display input fields for insert -->
-      <div *ngIf="selection == 'insert' && selectedFeed == Feed.SEAMANTIC">
+      <div *ngIf="selection == 'insert' && selectedFeed == Feed.CODE">
         <input
           [(ngModel)]="insertLabels"
           class="form-control mb-2"
