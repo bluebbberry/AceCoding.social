@@ -20,4 +20,4 @@ Video-Demo can be found [here](https://makertube.net/w/wujdK9KESomUeYaagSKdKw).
 
 Preview of UI:
 
-![docs/Screenshot from 2025-04-15 20-00-22.png](docs/Screenshot from 2025-04-15 20-00-22.png)
+![docs/Screenshot from 2025-04-15 20-00-22.png](docs/Screenshot%20from%202025-04-15%2020-00-22.png)
