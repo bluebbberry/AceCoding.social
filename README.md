@@ -1,4 +1,4 @@
-# AceCoding.social
+# AceCode.social
 
 Combining vibe coding, attempto controlled english (ace) and the social web - form space on the social web through words, secured by attempto controlled english.
 
