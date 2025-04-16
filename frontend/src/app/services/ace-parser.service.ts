@@ -1,62 +1,114 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AceParserService {
+  private renderer: Renderer2;
+  private imageSize: string = '150px';
 
-  constructor() {}
+  constructor(rendererFactory: RendererFactory2) {
+    this.renderer = rendererFactory.createRenderer(null, null);
+  }
 
   parse(aceCode: string): void {
-    try {
-      const lines = aceCode.split('\n').map(line => line.trim()).filter(Boolean);
-
-      for (let line of lines) {
-        this.applyAceCommand(line);
-      }
-    } catch (error) {
-      alert("Syntax error (commands must be valid attempto controlled english - ace)");
+    const lines = aceCode.split('\n').map(line => line.trim()).filter(Boolean);
+    for (let line of lines) {
+      this.handleCommand(line);
     }
   }
 
-  private applyAceCommand(command: string): void {
-    // Example ACE-style commands and their effects:
-    // "The background color is blue."
-    // "The text color of the buttons is yellow."
-    // "The font size of the headers is 24 pixels."
-
-    const regex = /The (\w+(?: \w+)*) is (.+)\./i;
-    const match = command.match(regex);
-
-    if (match) {
-      const property = match[1].toLowerCase().replace(/ /g, '-');
-      const value = match[2];
-
-      console.log(`Parsed: ${property} -> ${value}`);
-
-      this.applyStyle(property, value);
-    } else {
-      throw new Error(`Unknown command ${command}`);
+  private handleCommand(command: string): void {
+    const imageMatch = command.match(/^An image with the URL "(.+?)" is added(?: to the (.+))?\.$/i);
+    if (imageMatch) {
+      const [, url, location] = imageMatch;
+      this.addImage(url, location);
+      return;
     }
+
+    const textMatch = command.match(/^A text block saying "(.+?)" is added(?: to the (.+))?\.$/i);
+    if (textMatch) {
+      const [, text, location] = textMatch;
+      this.addTextBlock(text, location);
+      return;
+    }
+
+    const imageSizeMatch = command.match(/^The size of the images is (.+)\.$/i);
+    if (imageSizeMatch) {
+      this.imageSize = imageSizeMatch[1];
+      return;
+    }
+
+    const textColorMatch = command.match(/^The text color of the text blocks is (.+)\.$/i);
+    if (textColorMatch) {
+      this.setTextColor(textColorMatch[1]);
+      return;
+    }
+
+    const textBgMatch = command.match(/^The background of the text blocks is (.+)\.$/i);
+    if (textBgMatch) {
+      this.setTextBackground(textBgMatch[1]);
+      return;
+    }
+
+    const bgColorMatch = command.match(/^The background color is (.+)\.$/i);
+    if (bgColorMatch) {
+      document.body.style.backgroundColor = bgColorMatch[1];
+      return;
+    }
+
+    console.warn(`Unrecognized ACE command: "${command}"`);
   }
 
-  private applyStyle(property: string, value: string): void {
-    // For simplicity, apply styles to body or global elements.
-    const body = document.body;
+  private getTargetElement(location?: string): HTMLElement {
+    if (!location) return document.querySelector('.content-area') || document.body;
 
-    // Mapping examples
-    if (property === 'background-color') {
-      body.style.backgroundColor = value;
-    } else if (property === 'text-color-of-the-buttons') {
-      document.querySelectorAll('button').forEach(btn => {
-        (btn as HTMLElement).style.color = value;
-      });
-    } else if (property === 'font-size-of-the-headers') {
-      document.querySelectorAll('h1, h2, h3').forEach(header => {
-        (header as HTMLElement).style.fontSize = value;
-      });
-    } else {
-      console.warn(`Unknown ACE command: ${property}`);
-    }
+    const selectorMap: { [key: string]: string } = {
+      'footer': 'footer',
+      'header': 'header',
+      'main': 'main',
+      'sidebar': '.sidebar-container',
+      'left panel': '.sidebar-left',
+      'right panel': '.sidebar-right',
+      'content': '.content-area',
+      'feed': '#main-feed',
+    };
+
+    const selector = selectorMap[location.toLowerCase()];
+    const element = selector ? document.querySelector(selector) : null;
+
+    return element as HTMLElement || document.body;
+  }
+
+  private addImage(url: string, location?: string): void {
+    const img = this.renderer.createElement('img');
+    this.renderer.setAttribute(img, 'src', url);
+    this.renderer.setStyle(img, 'width', this.imageSize);
+    this.renderer.setStyle(img, 'height', 'auto');
+    this.renderer.setStyle(img, 'margin', '10px');
+    this.renderer.setStyle(img, 'border', '4px groove cyan');
+    this.renderer.setStyle(img, 'box-shadow', '4px 4px 0 magenta');
+
+    const container = this.getTargetElement(location);
+    this.renderer.appendChild(container, img);
+  }
+
+  private addTextBlock(text: string, location?: string): void {
+    const p = this.renderer.createElement('p');
+    this.renderer.setProperty(p, 'innerText', text);
+    this.renderer.addClass(p, 'retro-text');
+
+    const container = this.getTargetElement(location);
+    this.renderer.appendChild(container, p);
+  }
+
+  private setTextColor(color: string): void {
+    const elements = document.querySelectorAll('.retro-text');
+    elements.forEach(el => (el as HTMLElement).style.color = color);
+  }
+
+  private setTextBackground(color: string): void {
+    const elements = document.querySelectorAll('.retro-text');
+    elements.forEach(el => (el as HTMLElement).style.backgroundColor = color);
   }
 }
