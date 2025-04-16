@@ -65,7 +65,7 @@ export class AceParserService {
 
     const selectorMap: { [key: string]: string } = {
       'footer': 'footer',
-      'header': 'header',
+      'header': '.feed-header',
       'main': 'main',
       'sidebar': '.sidebar-container',
       'left panel': '.sidebar-left',
