@@ -16,7 +16,7 @@ Here are a few example commands in ACE that could be run on AceCoding.social in 
 
 ## Demo
 
-Video-Demo can be found [here](https://makertube.net/w/wujdK9KESomUeYaagSKdKw).
+Video-Demo can be found [here](https://makertube.net/w/cvBhmYHEKHWPy8JUkE94Rf).
 
 Preview of UI:
 
