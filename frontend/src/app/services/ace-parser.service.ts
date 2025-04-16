@@ -58,7 +58,7 @@ export class AceParserService {
     }
 
     console.warn(`Unrecognized ACE command: "${command}"`);
-    alert("Syntax warning - You are only able to code in valid ace (attempto controlled english)");
+    alert("Syntax error - You are only able to code in valid ace (attempto controlled english)");
   }
 
   private getTargetElement(location?: string): HTMLElement {
