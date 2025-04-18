@@ -106,8 +106,6 @@ export class AceParserService {
       'header': '.feed-header',
       'main': 'main',
       'sidebar': '.sidebar-container',
-      'left panel': '.sidebar-left',
-      'right panel': '.sidebar-right',
       'content': '.content-area',
       'feed': '#main-feed',
     };
