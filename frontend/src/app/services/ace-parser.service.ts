@@ -1,4 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { AceRuntimeService } from './ace-runtime.service';
 
 @Injectable({
   providedIn: 'root'
@@ -6,9 +7,11 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 export class AceParserService {
   private renderer: Renderer2;
   private imageSize: string = '150px';
+  private runtime: AceRuntimeService;
 
-  constructor(rendererFactory: RendererFactory2) {
+  constructor(rendererFactory: RendererFactory2, private aceRuntimeService: AceRuntimeService) {
     this.renderer = rendererFactory.createRenderer(null, null);
+    this.runtime = aceRuntimeService;
   }
 
   parse(aceCode: string): void {
@@ -19,12 +22,17 @@ export class AceParserService {
   }
 
   private handleCommand(command: string): void {
+    console.log("Parse command: " + command);
+
     const imageMatch = command.match(/^An image with the URL "(.+?)" is added(?: to the (.+))?\.$/i);
     if (imageMatch) {
       const [, url, location] = imageMatch;
       this.addImage(url, location);
       return;
     }
+
+    const handledByRuntime = this.tryRuntimeCommand(command);
+    if (handledByRuntime) return;
 
     const textMatch = command.match(/^A text block saying "(.+?)" is added(?: to the (.+))?\.$/i);
     if (textMatch) {
@@ -51,9 +59,38 @@ export class AceParserService {
       return;
     }
 
+    // Font change
+    const fontMatch = command.match(/^The font is changed to (.+)\.$/i);
+    if (fontMatch) {
+      document.body.style.fontFamily = fontMatch[1];
+      return;
+    }
+
     const bgColorMatch = command.match(/^The background color is (.+)\.$/i);
     if (bgColorMatch) {
       document.body.style.backgroundColor = bgColorMatch[1];
+      return;
+    }
+
+    const botMatch = command.match(/^There is a bot that posts "(.+?)" every (\d+) seconds\.$/i);
+    if (botMatch) {
+      const [, message, seconds] = botMatch;
+      this.createBot(message, parseInt(seconds, 10));
+      return;
+    }
+
+    // Flashing background
+    const flashMatch = command.match(/^The page flashes (.+) every (\d+) seconds\.$/i);
+    if (flashMatch) {
+      const [, color, interval] = flashMatch;
+      this.flashBackground(color, parseInt(interval, 10));
+      return;
+    }
+
+    // Sound on load
+    const soundMatch = command.match(/^A sound with the URL \"(.+?)\" plays on load\.$/i);
+    if (soundMatch) {
+      this.playSound(soundMatch[1]);
       return;
     }
 
@@ -111,5 +148,56 @@ export class AceParserService {
   private setTextBackground(color: string): void {
     const elements = document.querySelectorAll('.retro-text');
     elements.forEach(el => (el as HTMLElement).style.backgroundColor = color);
+  }
+
+  private createBot(message: string, intervalSec: number): void {
+    const post = () => {
+      const p = this.renderer.createElement('p');
+      this.renderer.setProperty(p, 'innerText', `[🤖 Bot] ${message}`);
+      this.renderer.addClass(p, 'retro-text');
+      this.renderer.setStyle(p, 'font-weight', 'bold');
+      this.renderer.setStyle(p, 'color', 'purple');
+      this.renderer.setStyle(p, 'text-shadow', '1px 1px #fff');
+  
+      const container = document.querySelector('.content-area') || document.body;
+      this.renderer.appendChild(container, p);
+    };
+  
+    post(); // Initial post
+    setInterval(post, intervalSec * 1000);
+  }
+
+  private tryRuntimeCommand(command: string): boolean {
+    const logicPatterns = [
+      /^Set /i,
+      /^increment /i,
+      /^Every \\d+ seconds/i,
+      /^A button labeled /i,
+      /^If the .*? button is clicked/i,
+      /^If .* (equals|is greater than|is less than)/i,
+      /^Repeat \d+ times/i,
+    ];
+  
+    if (logicPatterns.some(pattern => pattern.test(command))) {
+      this.runtime.execute(command, this);
+      return true;
+    }
+  
+    return false;
+  }  
+
+  private flashBackground(color: string, intervalSec: number): void {
+    setInterval(() => {
+      document.body.style.backgroundColor = color;
+      setTimeout(() => {
+        document.body.style.backgroundColor = '';
+      }, 300);
+    }, intervalSec * 1000);
+  }
+
+  private playSound(url: string): void {
+    const audio = new Audio(url);
+    audio.autoplay = true;
+    audio.play();
   }
 }
