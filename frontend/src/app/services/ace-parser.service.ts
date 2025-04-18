@@ -22,6 +22,8 @@ export class AceParserService {
   }
 
   private handleCommand(command: string): void {
+    console.log("Parse command: " + command);
+
     const imageMatch = command.match(/^An image with the URL "(.+?)" is added(?: to the (.+))?\.$/i);
     if (imageMatch) {
       const [, url, location] = imageMatch;
@@ -173,11 +175,11 @@ export class AceParserService {
       /^A button labeled /i,
       /^If the .*? button is clicked/i,
       /^If .* (equals|is greater than|is less than)/i,
-      /^Repeat \\d+ times/i,
+      /^Repeat \d+ times/i,
     ];
   
     if (logicPatterns.some(pattern => pattern.test(command))) {
-      this.runtime.execute(command);
+      this.runtime.execute(command, this);
       return true;
     }
   

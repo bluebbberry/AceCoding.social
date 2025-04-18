@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AceParserService } from './ace-parser.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ export class AceRuntimeService {
     this.startWatchLoop();
   }
 
-  public execute(command: string): void {
+  public execute(command: string, aceParser: AceParserService): void {
+    console.log("Execute logical command: " + command);
+
     // Set variable
     const setMatch = command.match(/^Set (\w+) to (\d+)\.$/i);
     if (setMatch) {
@@ -34,7 +37,7 @@ export class AceRuntimeService {
     const everyMatch = command.match(/^Every (\d+) seconds?, (.+)$/i);
     if (everyMatch) {
       const [, seconds, innerCmd] = everyMatch;
-      setInterval(() => this.execute(innerCmd), parseInt(seconds, 10) * 1000);
+      setInterval(() => aceParser.parse(innerCmd), parseInt(seconds, 10) * 1000);
       return;
     }
 
@@ -50,7 +53,7 @@ export class AceRuntimeService {
     const clickMatch = command.match(/^If the \"(.+?)\" button is clicked, (.+)$/i);
     if (clickMatch) {
       const [, label, action] = clickMatch;
-      this.registerClickHandler(label, () => this.execute(action));
+      this.registerClickHandler(label, () => aceParser.parse(action));
       return;
     }
 
@@ -58,7 +61,7 @@ export class AceRuntimeService {
     const condMatch = command.match(/^If (\w+) (equals|is greater than|is less than) (\d+), (.+)$/i);
     if (condMatch) {
       const [, variable, operator, value, action] = condMatch;
-      this.watchCondition(variable, operator, parseInt(value, 10), () => this.execute(action));
+      this.watchCondition(variable, operator, parseInt(value, 10), () => aceParser.parse(action));
       return;
     }
 
@@ -67,7 +70,7 @@ export class AceRuntimeService {
     if (repeatMatch) {
       const [, times, action] = repeatMatch;
       for (let i = 0; i < parseInt(times, 10); i++) {
-        this.execute(action);
+        aceParser.parse(action);
       }
       return;
     }
