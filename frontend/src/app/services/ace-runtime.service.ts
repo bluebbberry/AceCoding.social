@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { AceParserService } from './ace-parser.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AceRuntimeService {
+  private renderer: Renderer2;
   private variables: { [key: string]: number } = {};
   private eventHandlers: { [key: string]: (() => void)[] } = {};
   private elementRefs: { [label: string]: HTMLElement } = {};
 
-  constructor() {
+  constructor(rendererFactory: RendererFactory2
+  ) {
     this.startWatchLoop();
+    this.renderer = rendererFactory.createRenderer(null, null);
   }
 
   public execute(command: string, aceParser: AceParserService): void {
@@ -45,7 +48,7 @@ export class AceRuntimeService {
     const btnMatch = command.match(/^A button labeled \"(.+?)\" is added\.?$/i);
     if (btnMatch) {
       const [, label] = btnMatch;
-      this.addButton(label);
+      this.addButton(label, aceParser);
       return;
     }
 
@@ -84,13 +87,15 @@ export class AceRuntimeService {
     }
   }
 
-  private addButton(label: string): void {
+  private addButton(label: string, aceParser: AceParserService): void {
     const button = document.createElement('button');
     button.innerText = label;
     button.style.margin = '10px';
     button.classList.add('retro-button');
-    document.body.appendChild(button);
+    // document.body.appendChild(button);
     this.elementRefs[label] = button;
+    let header = aceParser.getTargetElement("header");
+    this.renderer.appendChild(header, button);
 
     button.addEventListener('click', () => {
       const handlers = this.eventHandlers[label];
