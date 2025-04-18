@@ -57,6 +57,13 @@ export class AceParserService {
       return;
     }
 
+    // Font change
+    const fontMatch = command.match(/^The font is changed to (.+)\.$/i);
+    if (fontMatch) {
+      document.body.style.fontFamily = fontMatch[1];
+      return;
+    }
+
     const bgColorMatch = command.match(/^The background color is (.+)\.$/i);
     if (bgColorMatch) {
       document.body.style.backgroundColor = bgColorMatch[1];
