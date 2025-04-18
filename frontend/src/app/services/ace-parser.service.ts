@@ -106,8 +106,6 @@ export class AceParserService {
       'header': '.feed-header',
       'main': 'main',
       'sidebar': '.sidebar-container',
-      'left panel': '.sidebar-left',
-      'right panel': '.sidebar-right',
       'content': '.content-area',
       'feed': '#main-feed',
     };
@@ -171,7 +169,7 @@ export class AceParserService {
     const logicPatterns = [
       /^Set /i,
       /^increment /i,
-      /^Every \\d+ seconds/i,
+      /^Every \d+ seconds/i,
       /^A button labeled /i,
       /^If the .*? button is clicked/i,
       /^If .* (equals|is greater than|is less than)/i,
