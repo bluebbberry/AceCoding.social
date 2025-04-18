@@ -121,6 +121,7 @@ export class AceRuntimeService {
         case 'is greater than': return current > value;
         case 'is less than': return current < value;
       }
+      return false;
     };
     const checker = () => {
       if (condition()) callback();
