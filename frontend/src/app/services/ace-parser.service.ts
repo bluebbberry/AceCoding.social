@@ -98,7 +98,7 @@ export class AceParserService {
     alert("Syntax error - You are only able to code in valid ace (attempto controlled english)");
   }
 
-  private getTargetElement(location?: string): HTMLElement {
+  public getTargetElement(location?: string): HTMLElement {
     if (!location) return document.querySelector('.content-area') || document.body;
 
     const selectorMap: { [key: string]: string } = {
