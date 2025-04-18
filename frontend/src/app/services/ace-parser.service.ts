@@ -57,6 +57,13 @@ export class AceParserService {
       return;
     }
 
+    const botMatch = command.match(/^There is a bot that posts "(.+?)" every (\d+) seconds\.$/i);
+    if (botMatch) {
+      const [, message, seconds] = botMatch;
+      this.createBot(message, parseInt(seconds, 10));
+      return;
+    }
+
     console.warn(`Unrecognized ACE command: "${command}"`);
     alert("Syntax error - You are only able to code in valid ace (attempto controlled english)");
   }
@@ -111,5 +118,22 @@ export class AceParserService {
   private setTextBackground(color: string): void {
     const elements = document.querySelectorAll('.retro-text');
     elements.forEach(el => (el as HTMLElement).style.backgroundColor = color);
+  }
+
+  private createBot(message: string, intervalSec: number): void {
+    const post = () => {
+      const p = this.renderer.createElement('p');
+      this.renderer.setProperty(p, 'innerText', `[🤖 Bot] ${message}`);
+      this.renderer.addClass(p, 'retro-text');
+      this.renderer.setStyle(p, 'font-weight', 'bold');
+      this.renderer.setStyle(p, 'color', 'purple');
+      this.renderer.setStyle(p, 'text-shadow', '1px 1px #fff');
+  
+      const container = document.querySelector('.content-area') || document.body;
+      this.renderer.appendChild(container, p);
+    };
+  
+    post(); // Initial post
+    setInterval(post, intervalSec * 1000);
   }
 }
